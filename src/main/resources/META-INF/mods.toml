@@ -13,16 +13,16 @@ description='''
 ${mod_description}
 '''
 
-[[dependencies.webwall]]
+[[dependencies.openloader]]
     modId="forge"
     mandatory=true
     versionRange="[28,)"
     ordering="NONE"
-    side="CLIENT"
+    side="BOTH"
 
-[[dependencies.webwall]]
+[[dependencies.openloader]]
     modId="minecraft"
     mandatory=true
     versionRange="[1.14.4]"
     ordering="NONE"
-    side="CLIENT"
+    side="BOTH"
