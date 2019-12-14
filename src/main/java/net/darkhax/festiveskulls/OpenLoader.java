@@ -12,17 +12,17 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 
 @Mod("openloader")
 public final class OpenLoader {
-
-	public static final Logger LOGGER = LogManager.getLogger("Open Loader");
-	
-	public OpenLoader() {
-
-		MinecraftForge.EVENT_BUS.addListener(this::onServerStart);		
-		DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().getResourcePackList().addPackFinder(OpenLoaderPackFinder.RESOUCE));
-	}
-	
-	private void onServerStart(FMLServerAboutToStartEvent event) {
-		
-		event.getServer().getResourcePacks().addPackFinder(OpenLoaderPackFinder.DATA);
-	}
+    
+    public static final Logger LOGGER = LogManager.getLogger("Open Loader");
+    
+    public OpenLoader() {
+        
+        MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
+        DistExecutor.runWhenOn(Dist.CLIENT, () -> () -> Minecraft.getInstance().getResourcePackList().addPackFinder(OpenLoaderPackFinder.RESOUCE));
+    }
+    
+    private void onServerStart (FMLServerAboutToStartEvent event) {
+        
+        event.getServer().getResourcePacks().addPackFinder(OpenLoaderPackFinder.DATA);
+    }
 }
