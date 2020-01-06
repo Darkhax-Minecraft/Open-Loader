@@ -16,13 +16,13 @@ ${mod_description}
 [[dependencies.openloader]]
     modId="forge"
     mandatory=true
-    versionRange="[29,)"
+    versionRange="[30,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.openloader]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.15]"
+    versionRange="[1.15.1]"
     ordering="NONE"
     side="BOTH"
