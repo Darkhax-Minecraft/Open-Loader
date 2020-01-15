@@ -1,4 +1,4 @@
-package net.darkhax.festiveskulls;
+package net.darkhax.openloader;
 
 import java.io.File;
 import java.io.IOException;
