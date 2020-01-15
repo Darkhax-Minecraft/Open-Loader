@@ -36,10 +36,50 @@ public final class OpenLoaderPackFinder implements IPackFinder {
         }
     }
     
+    private static File[] getFilesFromDir (File file) {
+        
+        File[] files = new File[0];
+        
+        if (file == null) {
+            
+            OpenLoader.LOGGER.error("Attempted to read from a null file.");
+        }
+        
+        else if (!file.isDirectory()) {
+            
+            OpenLoader.LOGGER.error("Can not read from {}. It's not a directory.", file.getAbsolutePath());
+        }
+        
+        else {
+            
+            try {
+                
+                final File[] readFiles = file.listFiles();
+                
+                if (readFiles == null) {
+                    
+                    OpenLoader.LOGGER.error("Could not read from {} due to a system error. This is likely an issue with your computer.", file.getAbsolutePath());
+                }
+                
+                else {
+                    
+                    files = readFiles;
+                }
+            }
+            
+            catch (final SecurityException e) {
+                
+                OpenLoader.LOGGER.error("Could not read from {}. Blocked by system level security. This is likely an issue with your computer.", file.getAbsolutePath(), e);
+            }
+        }
+        
+        return files;
+    }
+    
     @Override
     public <T extends ResourcePackInfo> void addPackInfosToMap (Map<String, T> packs, IFactory<T> factory) {
         
-        for (final File packCandidate : this.loaderDirectory.listFiles()) {
+        for (final File packCandidate : getFilesFromDir(this.loaderDirectory)) {
             
             final boolean isFilePack = packCandidate.isFile() && packCandidate.getName().endsWith(".zip");
             final boolean isFolderPack = !isFilePack && packCandidate.isDirectory() && new File(packCandidate, "pack.mcmeta").isFile();
