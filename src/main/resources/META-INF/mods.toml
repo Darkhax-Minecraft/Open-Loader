@@ -4,6 +4,7 @@ issueTrackerURL="https://github.com/Darkhax-Minecraft/Open-Loader/issues"
 
 [[mods]]
 modId="openloader"
+updateJSONURL="https://updates.blamejared.com/get?n=openloader&gv=1.15.2"
 version="${version}"
 displayName="${mod_name}"
 displayURL="${mod_download}"
