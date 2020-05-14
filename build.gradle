@@ -275,3 +275,8 @@ task updateVersionTracker {
         println "VersionCheck Response: ${req.getInputStream().getText()}"
     }
 }
+
+task recompress(type:Exec, dependsOn: jar) {
+
+    commandLine 'advzip', '-z', '-4', '-i 8', jar.archivePath.toString()
+}
