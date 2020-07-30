@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
+        maven {url='https://dist.creeper.host/Sponge/maven'}
         maven { url 'https://plugins.gradle.org/m2/' }
         jcenter()
         mavenCentral()
@@ -8,6 +9,7 @@ buildscript {
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
         classpath 'gradle.plugin.com.matthewprenger:CurseGradle:1.4.0'
+        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 
@@ -45,11 +47,13 @@ minecraft {
     }
 	
     runs {
+    
         client {
 		
             workingDirectory project.file('run')
 			taskName "${mod_name}".replaceAll("\\s","") + 'Client'
-
+			arg "-mixin.config=" + project.findProperty('mixin_id') + ".mixins.json"
+			
             mods {
                 openloader {
                     source sourceSets.main
@@ -58,8 +62,10 @@ minecraft {
         }
 
         server {
+        
             workingDirectory project.file('run')
 			taskName "${mod_name}".replaceAll("\\s","") + 'Server'
+			arg "-mixin.config=" + project.findProperty('mixin_id') + ".mixins.json"
 			
             mods {
                 openloader {
@@ -87,7 +93,8 @@ jar {
             'Implementation-Vendor' :"${mod_vendor}",
             'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
             'Built-On-Java': "${System.getProperty('java.vm.version')} (${System.getProperty('java.vm.vendor')})",
-            'Built-On': "${forge_version}"
+            'Built-On': "${forge_version}",
+            "MixinConfigs": "${mixin_id}.mixins.json"
         ])
     }
 }
@@ -199,7 +206,7 @@ task signJar(type: SignJar, dependsOn: jar) {
 	}
 }
 
-//build.dependsOn signJar
+build.dependsOn signJar
 
 tasks.getByName("curseforge").doLast {
     
@@ -281,4 +288,11 @@ task updateVersionTracker {
 task recompress(type:Exec, dependsOn: jar) {
 
     commandLine 'advzip', '-z', '-4', '-i 8', jar.archivePath.toString()
+}
+
+apply plugin: 'org.spongepowered.mixin'
+
+mixin {
+
+    add sourceSets.main, "${mixin_id}.refmap.json"
 }
