@@ -20,8 +20,8 @@ public final class OpenLoader {
         MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
         
         if (FMLEnvironment.dist == Dist.CLIENT) {
-        	
-        	Minecraft.getInstance().getResourcePackList().addPackFinder(OpenLoaderPackFinder.RESOUCE);
+            
+            Minecraft.getInstance().getResourcePackList().addPackFinder(OpenLoaderPackFinder.RESOUCE);
         }
     }
     

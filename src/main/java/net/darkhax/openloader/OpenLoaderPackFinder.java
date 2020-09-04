@@ -25,7 +25,7 @@ public final class OpenLoaderPackFinder implements IPackFinder {
     
     private OpenLoaderPackFinder(String type, File loaderDirectory) {
         
-    	this.type = type;
+        this.type = type;
         this.loaderDirectory = loaderDirectory;
         
         try {
@@ -39,10 +39,9 @@ public final class OpenLoaderPackFinder implements IPackFinder {
         }
     }
     
-
-	@Override
-	public void func_230230_a_(Consumer<ResourcePackInfo> packs, IFactory factory) {
-
+    @Override
+    public void func_230230_a_ (Consumer<ResourcePackInfo> packs, IFactory factory) {
+        
         for (final File packCandidate : getFilesFromDir(this.loaderDirectory)) {
             
             final boolean isFilePack = packCandidate.isFile() && packCandidate.getName().endsWith(".zip");
@@ -66,7 +65,7 @@ public final class OpenLoaderPackFinder implements IPackFinder {
                 OpenLoader.LOGGER.error("Failed to load {} from {}. Archive packs must be zips. Folder packs must have a valid pack.mcmeta file.", this.type, packCandidate.getAbsolutePath());
             }
         }
-	}
+    }
     
     private Supplier<IResourcePack> getAsPack (File file) {
         

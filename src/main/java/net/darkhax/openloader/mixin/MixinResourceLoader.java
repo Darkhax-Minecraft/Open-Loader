@@ -20,11 +20,11 @@ import net.minecraftforge.fml.packs.ResourcePackLoader.IPackInfoFinder;
 
 @Mixin(ResourcePackLoader.class)
 public class MixinResourceLoader {
-
-	@Inject(method = "loadResourcePacks(Lnet/minecraft/resources/ResourcePackList;Ljava/util/function/BiFunction;)V", at = @At("HEAD"), remap = false)
-    private static <T extends ResourcePackInfo> void injectPacks(ResourcePackList resourcePacks, BiFunction<Map<ModFile, ? extends ModFileResourcePack>, BiConsumer<? super ModFileResourcePack, T>, IPackInfoFinder> packFinder, CallbackInfo callback) {
-
-		resourcePacks.addPackFinder(OpenLoaderPackFinder.DATA);
-		OpenLoader.LOGGER.info("Injecting data pack finder.");
+    
+    @Inject(method = "loadResourcePacks(Lnet/minecraft/resources/ResourcePackList;Ljava/util/function/BiFunction;)V", at = @At("HEAD"), remap = false)
+    private static <T extends ResourcePackInfo> void injectPacks (ResourcePackList resourcePacks, BiFunction<Map<ModFile, ? extends ModFileResourcePack>, BiConsumer<? super ModFileResourcePack, T>, IPackInfoFinder> packFinder, CallbackInfo callback) {
+        
+        resourcePacks.addPackFinder(OpenLoaderPackFinder.DATA);
+        OpenLoader.LOGGER.info("Injecting data pack finder.");
     }
 }
