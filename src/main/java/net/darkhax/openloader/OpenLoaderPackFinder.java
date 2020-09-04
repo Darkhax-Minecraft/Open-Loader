@@ -52,7 +52,7 @@ public final class OpenLoaderPackFinder implements IPackFinder {
                 final String packName = "openloader/" + packCandidate.getName();
                 
                 OpenLoader.LOGGER.info("Loading {} {}.", this.type, packName);
-                final ResourcePackInfo packInfo = ResourcePackInfo.createResourcePack(packName, true, this.getAsPack(packCandidate), factory, ResourcePackInfo.Priority.BOTTOM, IPackNameDecorator.field_232625_a_);
+                final ResourcePackInfo packInfo = ResourcePackInfo.createResourcePack(packName, true, this.getAsPack(packCandidate), factory, ResourcePackInfo.Priority.TOP, IPackNameDecorator.field_232625_a_);
                 
                 if (packInfo != null) {
                     
