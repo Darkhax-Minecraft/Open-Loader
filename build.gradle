@@ -285,11 +285,6 @@ task updateVersionTracker {
     }
 }
 
-task recompress(type:Exec, dependsOn: jar) {
-
-    commandLine 'advzip', '-z', '-4', '-i 8', jar.archivePath.toString()
-}
-
 apply plugin: 'org.spongepowered.mixin'
 
 mixin {
