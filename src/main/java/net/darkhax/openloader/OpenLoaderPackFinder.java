@@ -17,16 +17,18 @@ import net.minecraft.resources.ResourcePackInfo.IFactory;
 
 public final class OpenLoaderPackFinder implements IPackFinder {
     
-    public static final OpenLoaderPackFinder DATA = new OpenLoaderPackFinder("Data Pack", new File("openloader/data"));
-    public static final OpenLoaderPackFinder RESOUCE = new OpenLoaderPackFinder("Resource Pack", new File("openloader/resources"));
+    public static final OpenLoaderPackFinder DATA = new OpenLoaderPackFinder("Data Pack", "openloader/data");
+    public static final OpenLoaderPackFinder RESOUCE = new OpenLoaderPackFinder("Resource Pack", "openloader/resources");
     
     private final String type;
+    private final String path;
     private final File loaderDirectory;
     
-    private OpenLoaderPackFinder(String type, File loaderDirectory) {
+    private OpenLoaderPackFinder(String type, String path) {
         
         this.type = type;
-        this.loaderDirectory = loaderDirectory;
+        this.path = path;
+        this.loaderDirectory = new File(path);
         
         try {
             
@@ -49,7 +51,7 @@ public final class OpenLoaderPackFinder implements IPackFinder {
             
             if (isFilePack || isFolderPack) {
                 
-                final String packName = "openloader/" + packCandidate.getName();
+                final String packName = path + "/" + packCandidate.getName();
                 
                 OpenLoader.LOGGER.info("Loading {} {}.", this.type, packName);
                 final ResourcePackInfo packInfo = ResourcePackInfo.createResourcePack(packName, true, this.getAsPack(packCandidate), factory, ResourcePackInfo.Priority.TOP, IPackNameDecorator.field_232625_a_);
