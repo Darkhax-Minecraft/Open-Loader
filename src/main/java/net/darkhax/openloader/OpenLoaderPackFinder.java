@@ -42,7 +42,7 @@ public final class OpenLoaderPackFinder implements IPackFinder {
     }
     
     @Override
-    public void func_230230_a_ (Consumer<ResourcePackInfo> packs, IFactory factory) {
+    public void findPacks (Consumer<ResourcePackInfo> packs, IFactory factory) {
         
         for (final File packCandidate : getFilesFromDir(this.loaderDirectory)) {
             
@@ -54,7 +54,7 @@ public final class OpenLoaderPackFinder implements IPackFinder {
                 final String packName = path + "/" + packCandidate.getName();
                 
                 OpenLoader.LOGGER.info("Loading {} {}.", this.type, packName);
-                final ResourcePackInfo packInfo = ResourcePackInfo.createResourcePack(packName, true, this.getAsPack(packCandidate), factory, ResourcePackInfo.Priority.TOP, IPackNameDecorator.field_232625_a_);
+                final ResourcePackInfo packInfo = ResourcePackInfo.createResourcePack(packName, true, this.getAsPack(packCandidate), factory, ResourcePackInfo.Priority.TOP, IPackNameDecorator.PLAIN);
                 
                 if (packInfo != null) {
                     
