@@ -14,17 +14,3 @@ authors="${mod_authors}"
 description='''
 ${mod_description}
 '''
-
-[[dependencies.openloader]]
-    modId="forge"
-    mandatory=true
-    versionRange="[36,]"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.openloader]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.16.5]"
-    ordering="NONE"
-    side="BOTH"
