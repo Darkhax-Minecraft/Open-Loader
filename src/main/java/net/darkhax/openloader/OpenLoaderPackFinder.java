@@ -3,6 +3,7 @@ package net.darkhax.openloader;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
 import com.google.common.base.Supplier;
@@ -17,22 +18,20 @@ import net.minecraft.resources.ResourcePackInfo.IFactory;
 
 public final class OpenLoaderPackFinder implements IPackFinder {
     
-    public static final OpenLoaderPackFinder DATA = new OpenLoaderPackFinder("Data Pack", "openloader/data");
-    public static final OpenLoaderPackFinder RESOUCE = new OpenLoaderPackFinder("Resource Pack", "openloader/resources");
+    public static final OpenLoaderPackFinder DATA = new OpenLoaderPackFinder(Type.DATA);
+    public static final OpenLoaderPackFinder RESOUCE = new OpenLoaderPackFinder(Type.RESOURCES);
     
-    private final String type;
-    private final String path;
+    private final Type type;
     private final File loaderDirectory;
     
-    private OpenLoaderPackFinder(String type, String path) {
+    private OpenLoaderPackFinder(Type type) {
         
         this.type = type;
-        this.path = path;
-        this.loaderDirectory = new File(path);
+        this.loaderDirectory = new File(type.path);
         
         try {
             
-            Files.createDirectories(loaderDirectory.toPath());
+            Files.createDirectories(this.loaderDirectory.toPath());
         }
         
         catch (final IOException e) {
@@ -44,6 +43,12 @@ public final class OpenLoaderPackFinder implements IPackFinder {
     @Override
     public void findPacks (Consumer<ResourcePackInfo> packs, IFactory factory) {
         
+        if (!this.type.enabled.getAsBoolean()) {
+            
+            OpenLoader.LOGGER.info("{} loading has been disabled via the config.", this.type.displayName);
+            return;
+        }
+        
         for (final File packCandidate : getFilesFromDir(this.loaderDirectory)) {
             
             final boolean isFilePack = packCandidate.isFile() && packCandidate.getName().endsWith(".zip");
@@ -51,9 +56,9 @@ public final class OpenLoaderPackFinder implements IPackFinder {
             
             if (isFilePack || isFolderPack) {
                 
-                final String packName = path + "/" + packCandidate.getName();
+                final String packName = this.type.path + "/" + packCandidate.getName();
                 
-                OpenLoader.LOGGER.info("Loading {} {}.", this.type, packName);
+                OpenLoader.LOGGER.info("Loading {} {}.", this.type.displayName, packName);
                 final ResourcePackInfo packInfo = ResourcePackInfo.createResourcePack(packName, true, this.getAsPack(packCandidate), factory, ResourcePackInfo.Priority.TOP, IPackNameDecorator.PLAIN);
                 
                 if (packInfo != null) {
@@ -64,7 +69,7 @@ public final class OpenLoaderPackFinder implements IPackFinder {
             
             else {
                 
-                OpenLoader.LOGGER.error("Failed to load {} from {}. Archive packs must be zips. Folder packs must have a valid pack.mcmeta file.", this.type, packCandidate.getAbsolutePath());
+                OpenLoader.LOGGER.error("Failed to load {} from {}. Archive packs must be zips. Folder packs must have a valid pack.mcmeta file.", this.type.displayName, packCandidate.getAbsolutePath());
             }
         }
     }
@@ -112,5 +117,22 @@ public final class OpenLoaderPackFinder implements IPackFinder {
         }
         
         return files;
+    }
+    
+    static enum Type {
+        
+        DATA("Data Pack", "openloader/data", OpenLoader.CONFIG::allowDataPacks),
+        RESOURCES("Resource Pack", "openloader/resources", OpenLoader.CONFIG::allowResourcePacks);
+        
+        final String displayName;
+        final String path;
+        final BooleanSupplier enabled;
+        
+        Type(String name, String path, BooleanSupplier enabled) {
+            
+            this.displayName = name;
+            this.path = path;
+            this.enabled = enabled;
+        }
     }
 }
