@@ -61,6 +61,8 @@ minecraft {
             workingDirectory project.file('run')
             taskName "${mod_name}".replaceAll("\\s","") + 'Client'
             arg "-mixin.config=" + project.findProperty('mixin_id') + ".mixins.json"
+            property 'forge.logging.console.level', 'debug'
+            property 'terminal.ansi', 'true' 
             
             mods {
                 openloader {
@@ -74,6 +76,8 @@ minecraft {
             workingDirectory project.file('run')
             taskName "${mod_name}".replaceAll("\\s","") + 'Server'
             arg "-mixin.config=" + project.findProperty('mixin_id') + ".mixins.json"
+            property 'forge.logging.console.level', 'debug'
+            property 'terminal.ansi', 'true' 
             
             mods {
                 openloader {
