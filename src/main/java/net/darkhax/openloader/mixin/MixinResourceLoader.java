@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.darkhax.openloader.OpenLoader;
-import net.darkhax.openloader.OpenLoaderPackFinder;
 import net.minecraft.resources.ResourcePackInfo;
 import net.minecraft.resources.ResourcePackList;
 import net.minecraftforge.fml.loading.moddiscovery.ModFile;
@@ -24,7 +23,6 @@ public class MixinResourceLoader {
     @Inject(method = "loadResourcePacks(Lnet/minecraft/resources/ResourcePackList;Ljava/util/function/BiFunction;)V", at = @At("RETURN"), remap = false)
     private static <T extends ResourcePackInfo> void injectPacks (ResourcePackList resourcePacks, BiFunction<Map<ModFile, ? extends ModFileResourcePack>, BiConsumer<? super ModFileResourcePack, T>, IPackInfoFinder> packFinder, CallbackInfo callback) {
         
-        resourcePacks.addPackFinder(OpenLoaderPackFinder.DATA);
-        OpenLoader.LOGGER.info("Injecting data pack finder.");
+        OpenLoader.injectDatapackFinder(resourcePacks);
     }
 }
