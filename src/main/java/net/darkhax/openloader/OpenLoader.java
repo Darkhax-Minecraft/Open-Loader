@@ -44,9 +44,9 @@ public final class OpenLoader {
         event.getServer().getResourcePacks().addPackFinder(OpenLoaderPackFinder.DATA);
     }
     
-    public static void injectDatapackFinder(ResourcePackList resourcePacks) {
+    public static void injectDatapackFinder (ResourcePackList resourcePacks) {
         
-        if (DistExecutor.unsafeRunForDist(() -> () -> resourcePacks != Minecraft.getInstance().getResourcePackList(), () -> () -> true)) {
+        if (DistExecutor.unsafeRunForDist( () -> () -> resourcePacks != Minecraft.getInstance().getResourcePackList(), () -> () -> true)) {
             
             resourcePacks.addPackFinder(OpenLoaderPackFinder.DATA);
             OpenLoader.LOGGER.info("Injecting data pack finder.");
