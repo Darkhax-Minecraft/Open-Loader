@@ -6,6 +6,8 @@ import java.nio.file.Files;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 
+import javax.annotation.Nullable;
+
 import com.google.common.base.Supplier;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -64,10 +66,10 @@ public final class OpenLoaderPackFinder implements IPackFinder {
                 
                 final String packName = this.type.path + "/" + packCandidate.getName();
                 final Supplier<IResourcePack> pack = this.getAsPack(packCandidate);
-                final PackMeta meta = this.getPackMeta(packName, pack);
+                final PackMeta meta = getPackMeta(packName, pack);
                 
                 OpenLoader.LOGGER.info("Loading {} {}.", this.type.displayName, packName);
-                OpenLoader.LOGGER.debug("Loading {} with builtin={} priority={}", packName, meta.isBuiltIn, meta.priority);
+                OpenLoader.LOGGER.debug("Loading {} with {}.", packName, meta);
                 
                 final ResourcePackInfo packInfo = ResourcePackInfo.createResourcePack(packName, meta.isBuiltIn, pack, factory, meta.priority, IPackNameDecorator.PLAIN);
                 
@@ -84,7 +86,7 @@ public final class OpenLoaderPackFinder implements IPackFinder {
         }
     }
     
-    private PackMeta getPackMeta (String packName, Supplier<IResourcePack> pack) {
+    public static PackMeta getPackMeta (String packName, Supplier<IResourcePack> pack) {
         
         try (IResourcePack packData = pack.get()) {
             
@@ -102,7 +104,7 @@ public final class OpenLoaderPackFinder implements IPackFinder {
             OpenLoader.LOGGER.catching(e);
         }
         
-        return new PackMeta(true, Priority.TOP);
+        return new PackMeta(true, Priority.TOP, true);
     }
     
     private Supplier<IResourcePack> getAsPack (File file) {
@@ -150,7 +152,7 @@ public final class OpenLoaderPackFinder implements IPackFinder {
         return files;
     }
     
-    static enum Type {
+    public static enum Type {
         
         DATA("Data Pack", "openloader/data", OpenLoader.CONFIG::allowDataPacks),
         RESOURCES("Resource Pack", "openloader/resources", OpenLoader.CONFIG::allowResourcePacks);
@@ -164,6 +166,27 @@ public final class OpenLoaderPackFinder implements IPackFinder {
             this.displayName = name;
             this.path = path;
             this.enabled = enabled;
+        }
+        
+        @Nullable
+        public static Type getPackType (ResourcePackInfo pack) {
+            
+            final String packName = pack.getName();
+            
+            for (final Type type : Type.values()) {
+                
+                if (packName.startsWith(type.path)) {
+                    
+                    return type;
+                }
+            }
+            
+            return null;
+        }
+        
+        public static boolean isOpenLoaderPack (ResourcePackInfo pack) {
+            
+            return getPackType(pack) != null;
         }
     }
     
@@ -181,25 +204,34 @@ public final class OpenLoaderPackFinder implements IPackFinder {
             final boolean builtin = JSONUtils.getBoolean(json, "builtin", true);
             final String priorityName = JSONUtils.getString(json, "priority", "top").toLowerCase();
             final Priority priority = "top".equalsIgnoreCase(priorityName) ? Priority.TOP : "bottom".equalsIgnoreCase(priorityName) ? Priority.BOTTOM : null;
+            final boolean defaultEnabled = JSONUtils.getBoolean(json, "defaultEnabled", true);
             
             if (priority == null) {
                 
                 throw new JsonParseException("Expected priority to be \"top\" or \"bottom\". " + priorityName + " is not a valid value!");
             }
             
-            return new PackMeta(builtin, priority);
+            return new PackMeta(builtin, priority, defaultEnabled);
         }
     }
     
-    static class PackMeta {
+    public static class PackMeta {
         
         public final boolean isBuiltIn;
         public final Priority priority;
+        public final boolean defaultEnabled;
         
-        public PackMeta(boolean isBuiltIn, Priority priority) {
+        public PackMeta(boolean isBuiltIn, Priority priority, boolean defaultEnabled) {
             
             this.isBuiltIn = isBuiltIn;
             this.priority = priority;
+            this.defaultEnabled = defaultEnabled;
+        }
+        
+        @Override
+        public String toString () {
+            
+            return "PackMeta [isBuiltIn=" + this.isBuiltIn + ", priority=" + this.priority + ", defaultEnabled=" + this.defaultEnabled + "]";
         }
     }
 }

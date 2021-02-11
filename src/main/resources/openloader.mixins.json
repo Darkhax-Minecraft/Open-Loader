@@ -6,5 +6,9 @@
 	"mixins": [
 		"MixinResourceLoader"
 	],
+    "client": [
+        "MixinGameSettings",
+        "MixinResourcePackList"
+    ],
 	"minVersion": "0.8"
 }
