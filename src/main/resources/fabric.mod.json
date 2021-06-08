@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "openloader",
+  "version": "${version}",
+  "name": "OpenLoader",
+  "description": "Load data packs and resource packs from a global folder.",
+  "authors": [
+    "Darkhax"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/open-loader",
+    "sources": "https://github.com/Darkhax-Minecraft/Open-Loader",
+    "issues": "https://github.com/Darkhax-Minecraft/Open-Loader/issues"
+  },
+  "license": "LGPL v2.1",
+  "environment": "*",
+  "entrypoints": {
+    "client": [ "net.darkhax.openloader.OpenLoaderClient" ]
+  },
+  "mixins": [
+    "openloader.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.11",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  }
+}

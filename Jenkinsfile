@@ -7,9 +7,14 @@ pipeline {
     stages {
         
         stage('Build') {
-        
-            steps {
+
+            tools {
             
+                jdk "jdk-16.0.1+9"
+            }
+            
+            steps {
+                
                 withCredentials([
                     file(credentialsId: 'mod_build_secrets', variable: 'ORG_GRADLE_PROJECT_secretFile'),
                     file(credentialsId: 'java_keystore', variable: 'ORG_GRADLE_PROJECT_keyStore')
@@ -17,7 +22,7 @@ pipeline {
             
                     echo 'Building project.'
                     sh 'chmod +x gradlew'
-                    sh './gradlew clean build publish curseforge updateVersionTracker --stacktrace --warn'
+                    sh './gradlew clean build publish curseforge --stacktrace --warn'
                 }
             }
         }

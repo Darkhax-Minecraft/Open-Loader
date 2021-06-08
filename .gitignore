@@ -1,20 +1,21 @@
+#IntelliJ IDEA
 *.class
 *.iml
 *.ipr
 *.iws
-*.classpath
-*.project
-*.prefs
-*.launch
-/output
-/logs
+out/
 
 #ForgeGradle
-/build
-/.gradle
-/eclipse/assets
+build/
+.gradle/
+run/
 /libs
+/logs
+
+#Eclipse
+.classpath
+.metadata/
+.project
+.settings/
+*.launch
 /bin/
-/run/
-/Users/
-.factorypath

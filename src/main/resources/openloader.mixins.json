@@ -4,11 +4,8 @@
 	"compatibilityLevel": "JAVA_8",
 	"refmap": "openloader.refmap.json",
 	"mixins": [
-		"MixinResourceLoader"
+		"MixinResourcePackManager",
+        "MixinMinecraftServer"
 	],
-    "client": [
-        "MixinGameSettings",
-        "MixinResourcePackList"
-    ],
 	"minVersion": "0.8"
 }
