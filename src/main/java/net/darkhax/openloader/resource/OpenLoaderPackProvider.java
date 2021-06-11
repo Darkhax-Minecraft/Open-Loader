@@ -40,7 +40,7 @@ public class OpenLoaderPackProvider implements ResourcePackProvider {
                 this.type.getLogger().info("Loading pack {} from {}.", packName, candidate.getAbsolutePath());
                 
                 final Supplier<ResourcePack> packSupplier = candidate.isDirectory() ? () -> new DirectoryResourcePack(candidate) : () -> new ZipResourcePack(candidate);
-                final ResourcePackProfile profile = ResourcePackProfile.of(packName, true, packSupplier, factory, InsertionPosition.TOP, ResourcePackSource.field_25347);
+                final ResourcePackProfile profile = ResourcePackProfile.of(packName, true, packSupplier, factory, InsertionPosition.TOP, ResourcePackSource.PACK_SOURCE_NONE);
                 
                 if (profile != null) {
                     
