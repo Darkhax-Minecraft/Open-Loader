@@ -8,5 +8,3 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-
-rootProject.name="OpenLoader-Fabric-1.17"
