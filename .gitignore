@@ -1,20 +1,18 @@
-*.class
-*.iml
-*.ipr
-*.iws
+# Gradle
+.gradle/
+bin/
+build/
+
+#Eclipse
 *.classpath
 *.project
 *.prefs
 *.launch
-/output
-/logs
 
-#ForgeGradle
-/build
-/.gradle
-/eclipse/assets
-/libs
-/bin/
-/run/
+# General
+run/
+
+# Annotation Processing
+/.apt_generated_tests/
 /Users/
 .factorypath

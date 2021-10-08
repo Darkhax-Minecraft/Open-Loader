@@ -5,8 +5,8 @@ license = "LGPL 2.1"
 
 [[mods]]
 modId="openloader"
-updateJSONURL="https://updates.blamejared.com/get?n=openloader&gv=1.16.5"
-version="${version}"
+updateJSONURL="https://updates.blamejared.com/get?n=openloader&gv=1.17.1"
+version="${file.jarVersion}"
 displayName="${mod_name}"
 displayURL="${mod_download}"
 credits="${mod_credits}"
@@ -14,3 +14,17 @@ authors="${mod_authors}"
 description='''
 ${mod_description}
 '''
+
+[[dependencies.openloader]]
+    modId="forge"
+    mandatory=true
+    versionRange="[37.0.81,]"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.openloader]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.17.1]"
+    ordering="NONE"
+    side="BOTH"
