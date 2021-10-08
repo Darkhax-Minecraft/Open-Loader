@@ -14,6 +14,7 @@ authors="${mod_authors}"
 description='''
 ${mod_description}
 '''
+itemIcon="minecraft:book"
 
 [[dependencies.openloader]]
     modId="forge"
