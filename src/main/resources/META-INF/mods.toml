@@ -1,18 +1,18 @@
 modLoader="javafml"
-loaderVersion="[36,]"
+loaderVersion="[37,]"
 issueTrackerURL="https://github.com/Darkhax-Minecraft/Open-Loader/issues"
-license = "LGPL 2.1"
+license = "LGPL v2.1"
 
 [[mods]]
 modId="openloader"
 updateJSONURL="https://updates.blamejared.com/get?n=openloader&gv=1.17.1"
 version="${file.jarVersion}"
-displayName="${mod_name}"
-displayURL="${mod_download}"
-credits="${mod_credits}"
-authors="${mod_authors}"
+displayName="${modName}"
+displayURL="${modHomepage}"
+credits="${modCredits}"
+authors="${modAuthor}"
 description='''
-${mod_description}
+${modDescription}
 '''
 itemIcon="minecraft:book"
 
