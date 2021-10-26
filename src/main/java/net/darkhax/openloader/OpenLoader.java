@@ -24,7 +24,7 @@ public final class OpenLoader {
     public OpenLoader () {
 
         // Allow clients without the OpenLoader to connect to a server with it.
-        ModLoadingContext.get().registerExtensionPoint(DisplayTest.class, () -> new DisplayTest( () -> FMLNetworkConstants.IGNORESERVERONLY, (s, b) -> false));
+        ModLoadingContext.get().registerExtensionPoint(DisplayTest.class, () -> new DisplayTest( () -> FMLNetworkConstants.IGNORESERVERONLY, (s, b) -> true));
 
         // Register the configuration file with Forge and force load it.
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, CONFIG.getSpec(), "openloader/advanced-settings.toml");
