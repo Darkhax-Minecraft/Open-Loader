@@ -2,7 +2,7 @@
 	"required": true,
 	"package": "net.darkhax.openloader.mixin",
 	"compatibilityLevel": "JAVA_16",
-	"refmap": "openloader.refmap.json",
+	"refmap": "mixins.openloader.refmap.json",
 	"mixins": [
 		"MixinResourcePackManager",
         "MixinMinecraftServer"

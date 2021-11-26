@@ -10,7 +10,7 @@ pipeline {
 
             tools {
             
-                jdk "jdk-16.0.1+9"
+                jdk "OpenJDK 17"
             }
             
             steps {
