@@ -1,0 +1,9 @@
+{
+  "required": true,
+  "package": "net.darkhax.openloader.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MixinModResourcePackCreator"
+  ],
+  "minVersion": "0.8"
+}
