@@ -20,13 +20,13 @@ import java.util.function.Consumer;
 public class MixinModResourcePackCreator {
 
     @Final
-    @Shadow(remap = false)
+    @Shadow
     private PackType type;
 
     @Unique
     private OpenLoaderRepositorySource newSource;
 
-    @Inject(method = "<init>(Lnet/minecraft/server/packs/PackType;)V", at = @At("RETURN"), remap = false)
+    @Inject(method = "<init>(Lnet/minecraft/server/packs/PackType;)V", at = @At("RETURN"))
     private void onConstruction(PackType type, CallbackInfo callback) {
 
         if (type == PackType.SERVER_DATA) {
@@ -40,9 +40,12 @@ public class MixinModResourcePackCreator {
         }
     }
 
-    @Inject(method = "loadPacks(Ljava/util/function/Consumer;Lnet/minecraft/server/packs/repository/Pack$PackConstructor;)V", at = @At("RETURN"), remap = false)
+    @Inject(method = "loadPacks(Ljava/util/function/Consumer;Lnet/minecraft/server/packs/repository/Pack$PackConstructor;)V", at = @At("RETURN"))
     private void loadPacks(Consumer<Pack> consumer, Pack.PackConstructor factory, CallbackInfo callback) {
 
-        this.newSource.loadPacks(consumer, factory);
+        if (this.newSource != null) {
+
+            this.newSource.loadPacks(consumer, factory);
+        }
     }
 }
