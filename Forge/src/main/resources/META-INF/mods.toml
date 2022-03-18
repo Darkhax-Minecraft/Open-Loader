@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[39,)"
+loaderVersion = "[40,)"
 license = "${mod_license}"
 issueTrackerURL = "${mod_issues}"
 
@@ -14,17 +14,3 @@ authors = "${mod_author}"
 description = '''
 ${mod_description}
 '''
-
-[[dependencies.${ mod_id }]]
-modId = "forge"
-mandatory = true
-versionRange = "[39,)"
-ordering = "NONE"
-side = "CLIENT"
-
-[[dependencies.${ mod_id }]]
-modId = "minecraft"
-mandatory = true
-versionRange = "[1.18,1.19)"
-ordering = "NONE"
-side = "CLIENT"
