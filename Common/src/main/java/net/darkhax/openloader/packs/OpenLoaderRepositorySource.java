@@ -2,9 +2,10 @@ package net.darkhax.openloader.packs;
 
 import net.darkhax.openloader.Constants;
 import net.darkhax.openloader.config.ConfigSchema;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.FilePackResources;
-import net.minecraft.server.packs.FolderPackResources;
-import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.repository.RepositorySource;
@@ -15,10 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class OpenLoaderRepositorySource implements RepositorySource {
 
+    private static final PackSource SOURCE = PackSource.create((name) -> Component.translatable("pack.nameAndSource", name, Component.translatable("pack.source.openloader")).withStyle(ChatFormatting.GREEN), true);
     private final RepoType type;
     private final List<File> directories;
     private final ConfigSchema.PackConfig config;
@@ -53,7 +54,7 @@ public class OpenLoaderRepositorySource implements RepositorySource {
     }
 
     @Override
-    public void loadPacks(Consumer<Pack> consumer, Pack.PackConstructor packConstructor) {
+    public void loadPacks(Consumer<Pack> consumer) {
 
         if (this.config.enabled) {
 
@@ -73,7 +74,9 @@ public class OpenLoaderRepositorySource implements RepositorySource {
                     if (isArchivePack || isFolderPack) {
 
                         final String packName = this.type.getPath() + "/" + packCandidate.getName();
-                        final Pack pack = Pack.create(packName, true, createPackSupplier(packCandidate), packConstructor, Pack.Position.TOP, PackSource.BUILT_IN);
+                        final Component displayName = Component.literal(packName);
+
+                        final Pack pack = Pack.readMetaAndCreate(packName, displayName, true, createPackSupplier(packCandidate), this.type.getPackType(), Pack.Position.TOP, SOURCE);
 
                         if (pack != null) {
 
@@ -102,9 +105,9 @@ public class OpenLoaderRepositorySource implements RepositorySource {
         }
     }
 
-    private Supplier<PackResources> createPackSupplier (File packFile) {
+    private Pack.ResourcesSupplier createPackSupplier (File packFile) {
 
-        return () -> packFile.isDirectory() ? new FolderPackResources(packFile) : new FilePackResources(packFile);
+        return name -> packFile.isDirectory() ? new PathPackResources(name, packFile.toPath(), false) : new FilePackResources(name, packFile, false);
     }
 
     private boolean isArchivePack(File candidate, boolean logIssues) {

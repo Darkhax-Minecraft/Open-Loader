@@ -1,20 +1,30 @@
 package net.darkhax.openloader.packs;
 
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.PackSource;
+
 import java.io.File;
 import java.nio.file.Path;
 
 public enum RepoType {
 
-    DATA("Data Pack", "data"),
-    RESOURCES("Resource Pack", "resources");
+    DATA(PackType.SERVER_DATA, "Data Pack", "data"),
+    RESOURCES(PackType.CLIENT_RESOURCES, "Resource Pack", "resources");
 
+    final PackType type;
     final String displayName;
     final String path;
 
-    RepoType(String name, String path) {
+    RepoType(PackType type, String name, String path) {
 
+        this.type = type;
         this.displayName = name;
         this.path = path;
+    }
+
+    public PackType getPackType() {
+
+        return this.type;
     }
 
     public String getName() {

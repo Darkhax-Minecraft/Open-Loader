@@ -40,12 +40,12 @@ public class MixinModResourcePackCreator {
         }
     }
 
-    @Inject(method = "loadPacks(Ljava/util/function/Consumer;Lnet/minecraft/server/packs/repository/Pack$PackConstructor;)V", at = @At("RETURN"))
-    private void loadPacks(Consumer<Pack> consumer, Pack.PackConstructor factory, CallbackInfo callback) {
+    @Inject(method = "loadPacks(Ljava/util/function/Consumer;)V", at = @At("RETURN"))
+    private void loadPacks(Consumer<Pack> consumer, CallbackInfo callback) {
 
         if (this.newSource != null) {
 
-            this.newSource.loadPacks(consumer, factory);
+            this.newSource.loadPacks(consumer);
         }
     }
 }
