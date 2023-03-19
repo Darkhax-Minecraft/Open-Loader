@@ -1,7 +1,6 @@
 package net.darkhax.openloader.packs;
 
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.repository.PackSource;
 
 import java.io.File;
 import java.nio.file.Path;

@@ -2,7 +2,6 @@ package net.darkhax.openloader;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mojang.realmsclient.dto.GuardedSerializer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
