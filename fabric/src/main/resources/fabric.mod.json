@@ -22,6 +22,9 @@
   "entrypoints": {
     "main": [
       "net.darkhax.openloader.OpenLoaderFabric"
+    ],
+    "client": [
+      "net.darkhax.openloader.OpenLoaderFabricClient"
     ]
   },
   "mixins": [
