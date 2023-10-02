@@ -15,6 +15,6 @@ public class OpenLoaderFabric implements ModInitializer {
     public void onInitialize() {
 
         configDir = FabricLoader.getInstance().getConfigDir().resolve("openloader");
-        this.config = ConfigSchema.load(configDir);
+        config = ConfigSchema.load(configDir);
     }
 }

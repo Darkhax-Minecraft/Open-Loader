@@ -13,13 +13,13 @@ import java.nio.file.Path;
 @Mod(Constants.MOD_ID)
 public class OpenLoaderForge {
 
-    private ConfigSchema config;
-    private Path configDir;
+    public static ConfigSchema config;
+    public static Path configDir;
 
     public OpenLoaderForge() {
 
-        this.configDir = FMLPaths.CONFIGDIR.get().resolve("openloader");
-        this.config = ConfigSchema.load(configDir);
+        configDir = FMLPaths.CONFIGDIR.get().resolve("openloader");
+        config = ConfigSchema.load(configDir);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::injectPackRepositories);
     }
 
@@ -29,12 +29,12 @@ public class OpenLoaderForge {
 
             case CLIENT_RESOURCES -> {
 
-                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.RESOURCES, this.config.resourcePacks, configDir));
+                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.RESOURCES, config.resourcePacks, configDir));
             }
 
             case SERVER_DATA -> {
 
-                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.DATA, this.config.dataPacks,configDir));
+                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.DATA, config.dataPacks,configDir));
             }
 
             default -> Constants.LOG.warn("Encountered unknown pack type {}. Nothing will be loaded for this type.", event.getPackType().name());
