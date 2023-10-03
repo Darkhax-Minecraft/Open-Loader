@@ -12,8 +12,7 @@ public record OpenLoaderClientCommand(Path configDir, ConfigSchema config) imple
 
     @Override
     public int execute() {
-        Util.getPlatform().openFile(configDir.toFile());
-        return 1;
+        return 0;
     }
 
     @Override
@@ -23,13 +22,32 @@ public record OpenLoaderClientCommand(Path configDir, ConfigSchema config) imple
 
     @Override
     public List<ClientCommand> commands() {
-        return List.of(
-                new RepoCommand(configDir, RepoType.DATA, config.dataPacks),
-                new RepoCommand(configDir, RepoType.RESOURCES, config.resourcePacks)
-        );
+        return List.of(new RepoCommand(configDir, config));
     }
 
-    private record RepoCommand(Path configDir, RepoType type, ConfigSchema.PackConfig config) implements ClientCommand {
+    private record RepoCommand(Path configDir, ConfigSchema config) implements ClientCommand {
+
+        @Override
+        public int execute() {
+            Util.getPlatform().openFile(configDir.toFile());
+            return 1;
+        }
+
+        @Override
+        public String id() {
+            return "folder";
+        }
+
+        @Override
+        public List<ClientCommand> commands() {
+            return List.of(
+                    new SubRepoCommand(configDir, RepoType.DATA, config.dataPacks),
+                    new SubRepoCommand(configDir, RepoType.RESOURCES, config.resourcePacks)
+            );
+        }
+    }
+
+    private record SubRepoCommand(Path configDir, RepoType type, ConfigSchema.PackConfig config) implements ClientCommand {
 
         @Override
         public int execute() {
