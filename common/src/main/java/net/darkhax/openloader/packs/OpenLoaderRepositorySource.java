@@ -5,6 +5,7 @@ import net.darkhax.openloader.config.ConfigSchema;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.FilePackResources;
+import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
@@ -107,7 +108,8 @@ public class OpenLoaderRepositorySource implements RepositorySource {
 
     private Pack.ResourcesSupplier createPackSupplier (File packFile) {
 
-        return name -> packFile.isDirectory() ? new PathPackResources(name, packFile.toPath(), false) : new FilePackResources(name, packFile, false);
+        return new FilePackResources.FileResourcesSupplier(packFile, false);
+        //return name -> packFile.isDirectory() ? new PathPackResources(name, packFile.toPath(), false) : new FilePackResources(name, packFile, false, "openloader");
     }
 
     private boolean isArchivePack(File candidate, boolean logIssues) {
