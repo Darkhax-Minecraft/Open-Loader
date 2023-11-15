@@ -108,8 +108,7 @@ public class OpenLoaderRepositorySource implements RepositorySource {
 
     private Pack.ResourcesSupplier createPackSupplier (File packFile) {
 
-        return new FilePackResources.FileResourcesSupplier(packFile, false);
-        //return name -> packFile.isDirectory() ? new PathPackResources(name, packFile.toPath(), false) : new FilePackResources(name, packFile, false, "openloader");
+        return packFile.isDirectory() ? new PathPackResources.PathResourcesSupplier(packFile.toPath(), false) : new FilePackResources.FileResourcesSupplier(packFile, false);
     }
 
     private boolean isArchivePack(File candidate, boolean logIssues) {
