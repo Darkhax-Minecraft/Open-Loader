@@ -64,7 +64,6 @@ public class OpenLoaderRepositorySource implements RepositorySource {
             for (File parentDirectory : this.directories) {
 
                 int newPackCount = 0;
-                int failedPacks = 0;
 
                 for (File packCandidate : Objects.requireNonNull(parentDirectory.listFiles())) {
 
@@ -89,12 +88,11 @@ public class OpenLoaderRepositorySource implements RepositorySource {
 
                     else {
 
-                        Constants.LOG.warn("Skipping {}. It is not a valid {}!", packCandidate.getAbsolutePath(), this.type.getName());
-                        failedPacks++;
+                        Constants.LOG.debug("Skipping invalid {} {} from {}", typeName, this.type.getName(), packCandidate.getAbsolutePath());
                     }
                 }
 
-                Constants.LOG.info("Successfully injected {}/{} packs from {}.", newPackCount, newPackCount + failedPacks, parentDirectory.getAbsolutePath());
+                Constants.LOG.info("Successfully injected {} packs from {}.", newPackCount, parentDirectory.getAbsolutePath());
             }
         }
 
