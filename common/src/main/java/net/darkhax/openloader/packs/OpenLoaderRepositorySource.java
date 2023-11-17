@@ -68,8 +68,8 @@ public class OpenLoaderRepositorySource implements RepositorySource {
 
                 for (File packCandidate : Objects.requireNonNull(parentDirectory.listFiles())) {
 
-                    final boolean isArchivePack = isArchivePack(packCandidate, false);
-                    final boolean isFolderPack = !isArchivePack && isFolderPack(packCandidate, false);
+                    final boolean isArchivePack = isArchivePack(packCandidate);
+                    final boolean isFolderPack = !isArchivePack && isFolderPack(packCandidate);
                     final String typeName = isArchivePack ? "archive" : isFolderPack ? "folder" : "invalid";
 
                     if (isArchivePack || isFolderPack) {
@@ -89,9 +89,7 @@ public class OpenLoaderRepositorySource implements RepositorySource {
 
                     else {
 
-                        Constants.LOG.error("Skipping {}. It is not a valid {}!", packCandidate.getAbsolutePath(), this.type.getName());
-                        isArchivePack(packCandidate, true);
-                        isFolderPack(packCandidate, true);
+                        Constants.LOG.warn("Skipping {}. It is not a valid {}!", packCandidate.getAbsolutePath(), this.type.getName());
                         failedPacks++;
                     }
                 }
@@ -111,30 +109,12 @@ public class OpenLoaderRepositorySource implements RepositorySource {
         return packFile.isDirectory() ? new PathPackResources.PathResourcesSupplier(packFile.toPath(), false) : new FilePackResources.FileResourcesSupplier(packFile, false);
     }
 
-    private boolean isArchivePack(File candidate, boolean logIssues) {
+    private boolean isArchivePack(File candidate) {
 
-        if (candidate.isFile()) {
-
-            final String fileName = candidate.getName();
-            boolean isZipCompatibleArchive = endsWithIgnoreCase(fileName, ".zip") || endsWithIgnoreCase(fileName, ".jar");
-
-            if (!isZipCompatibleArchive && logIssues) {
-
-                Constants.LOG.warn("Can not load {} as an archive. It must be a .zip or .jar file!", candidate.getAbsolutePath());
-            }
-
-            return isZipCompatibleArchive;
-        }
-
-        else if (logIssues) {
-
-            Constants.LOG.warn("Can not load {} as an archive. It is not a file.", candidate.getAbsolutePath());
-        }
-
-        return false;
+        return candidate.isFile() && (endsWithIgnoreCase(candidate.getName(), ".zip") || endsWithIgnoreCase(candidate.getName(), ".jar"));
     }
 
-    private static boolean isFolderPack(File candidate, boolean logIssues) {
+    private static boolean isFolderPack(File candidate) {
 
         if (candidate.isDirectory()) {
 
@@ -143,15 +123,10 @@ public class OpenLoaderRepositorySource implements RepositorySource {
                 return true;
             }
 
-            else if (logIssues) {
+            else {
 
                 Constants.LOG.warn("Can not load {} as a folder pack. It is missing a pack.mcmeta file!", candidate.getAbsolutePath());
             }
-        }
-
-        else if (logIssues) {
-
-            Constants.LOG.warn("Can not load {} as folder. It is not a directory.", candidate.getAbsolutePath());
         }
 
         return false;
