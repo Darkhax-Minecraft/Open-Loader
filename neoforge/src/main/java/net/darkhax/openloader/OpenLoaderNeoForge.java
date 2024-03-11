@@ -30,12 +30,12 @@ public class OpenLoaderNeoForge {
 
             case CLIENT_RESOURCES -> {
 
-                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.RESOURCES, config.resourcePacks, configDir, config.appendSourceToPacks));
+                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.RESOURCES, config.resourcePacks, configDir, config));
             }
 
             case SERVER_DATA -> {
 
-                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.DATA, config.dataPacks,configDir, config.appendSourceToPacks));
+                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.DATA, config.dataPacks,configDir, config));
             }
 
             default -> Constants.LOG.warn("Encountered unknown pack type {}. Nothing will be loaded for this type.", event.getPackType().name());
