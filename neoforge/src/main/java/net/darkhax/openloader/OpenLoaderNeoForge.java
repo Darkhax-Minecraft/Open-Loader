@@ -3,6 +3,7 @@ package net.darkhax.openloader;
 import net.darkhax.openloader.config.ConfigSchema;
 import net.darkhax.openloader.packs.OpenLoaderRepositorySource;
 import net.darkhax.openloader.packs.RepoType;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLPaths;
@@ -16,11 +17,11 @@ public class OpenLoaderNeoForge {
     public static ConfigSchema config;
     public static Path configDir;
 
-    public OpenLoaderNeoForge() {
+    public OpenLoaderNeoForge(IEventBus modBus) {
 
         configDir = FMLPaths.CONFIGDIR.get().resolve("openloader");
         config = ConfigSchema.load(configDir);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::injectPackRepositories);
+        modBus.addListener(this::injectPackRepositories);
     }
 
     private void injectPackRepositories(AddPackFindersEvent event) {
@@ -29,12 +30,12 @@ public class OpenLoaderNeoForge {
 
             case CLIENT_RESOURCES -> {
 
-                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.RESOURCES, config.resourcePacks, configDir));
+                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.RESOURCES, config.resourcePacks, configDir, config.appendSourceToPacks));
             }
 
             case SERVER_DATA -> {
 
-                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.DATA, config.dataPacks,configDir));
+                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.DATA, config.dataPacks,configDir, config.appendSourceToPacks));
             }
 
             default -> Constants.LOG.warn("Encountered unknown pack type {}. Nothing will be loaded for this type.", event.getPackType().name());

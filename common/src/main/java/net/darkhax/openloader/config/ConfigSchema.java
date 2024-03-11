@@ -18,6 +18,9 @@ public class ConfigSchema {
     @Expose
     public PackConfig dataPacks = new PackConfig();
 
+    @Expose
+    public boolean appendSourceToPacks = true;
+
     public static class PackConfig {
 
         @Expose

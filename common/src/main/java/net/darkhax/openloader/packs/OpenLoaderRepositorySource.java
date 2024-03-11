@@ -5,7 +5,6 @@ import net.darkhax.openloader.config.ConfigSchema;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.FilePackResources;
-import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
@@ -20,15 +19,16 @@ import java.util.function.Consumer;
 
 public class OpenLoaderRepositorySource implements RepositorySource {
 
-    private static final PackSource SOURCE = PackSource.create((name) -> Component.translatable("pack.nameAndSource", name, Component.translatable("pack.source.openloader")).withStyle(ChatFormatting.GREEN), true);
     private final RepoType type;
     private final List<File> directories;
     private final ConfigSchema.PackConfig config;
+    private final boolean appendSourceToPacks;
 
-    public OpenLoaderRepositorySource(RepoType type, ConfigSchema.PackConfig config, Path configDir) {
+    public OpenLoaderRepositorySource(RepoType type, ConfigSchema.PackConfig config, Path configDir, boolean appendSources) {
 
         this.type = type;
         this.config = config;
+        this.appendSourceToPacks = appendSources;
 
         this.directories = new ArrayList<>();
         this.directories.add(configDir.resolve(type.getPath()).toFile());
@@ -74,15 +74,34 @@ public class OpenLoaderRepositorySource implements RepositorySource {
                     if (isArchivePack || isFolderPack) {
 
                         final String packName = this.type.getPath() + "/" + packCandidate.getName();
-                        final Component displayName = Component.literal(packName);
+                        final PackOptions options = PackOptions.readOptions(packCandidate);
 
-                        final Pack pack = Pack.readMetaAndCreate(packName, displayName, true, createPackSupplier(packCandidate), this.type.getPackType(), Pack.Position.TOP, SOURCE);
+                        if (options.enabled) {
 
-                        if (pack != null) {
+                            // return Component.translatable("pack.nameAndSource", name, Component.translatable("pack.source.openloader")).withStyle(ChatFormatting.GREEN);
 
-                            consumer.accept(pack);
-                            newPackCount++;
-                            Constants.LOG.info("Loaded {} {} from {}.", typeName, this.type.getName(), packCandidate.getAbsolutePath());
+                            final PackSource source = PackSource.create(rawDesc -> {
+                                Component description = options.getDescription(packName, rawDesc);
+
+                                if (options.addSourceToDescription && appendSourceToPacks) {
+                                    description = Component.translatable("pack.nameAndSource", description, Component.translatable("pack.source.openloader").withStyle(ChatFormatting.DARK_AQUA));
+
+                                }
+                                return description;
+                            }, true);
+
+                            final Pack pack = Pack.readMetaAndCreate(packName, options.getDisplayName(packName), options.required, createPackSupplier(packCandidate), this.type.getPackType(), options.getPosition(), source);
+
+                            if (pack != null) {
+
+                                consumer.accept(pack);
+                                newPackCount++;
+                                Constants.LOG.info("Loaded {} {} from {}.", typeName, this.type.getName(), packCandidate.getAbsolutePath());
+                            }
+                        }
+
+                        else {
+                            Constants.LOG.debug("Pack '{}' has been disabled by config file.", packName);
                         }
                     }
 
@@ -102,7 +121,7 @@ public class OpenLoaderRepositorySource implements RepositorySource {
         }
     }
 
-    private Pack.ResourcesSupplier createPackSupplier (File packFile) {
+    private Pack.ResourcesSupplier createPackSupplier(File packFile) {
 
         return packFile.isDirectory() ? new PathPackResources.PathResourcesSupplier(packFile.toPath(), false) : new FilePackResources.FileResourcesSupplier(packFile, false);
     }

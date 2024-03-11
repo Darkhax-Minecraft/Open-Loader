@@ -31,12 +31,12 @@ public class MixinModResourcePackCreator {
 
         if (type == PackType.SERVER_DATA) {
 
-            this.newSource = new OpenLoaderRepositorySource(RepoType.DATA, OpenLoaderFabric.config.dataPacks, OpenLoaderFabric.configDir);
+            this.newSource = new OpenLoaderRepositorySource(RepoType.DATA, OpenLoaderFabric.config.dataPacks, OpenLoaderFabric.configDir, OpenLoaderFabric.config.appendSourceToPacks);
         }
 
         else if (type == PackType.CLIENT_RESOURCES) {
 
-            this.newSource = new OpenLoaderRepositorySource(RepoType.RESOURCES, OpenLoaderFabric.config.resourcePacks, OpenLoaderFabric.configDir);
+            this.newSource = new OpenLoaderRepositorySource(RepoType.RESOURCES, OpenLoaderFabric.config.resourcePacks, OpenLoaderFabric.configDir, OpenLoaderFabric.config.appendSourceToPacks);
         }
     }
 
