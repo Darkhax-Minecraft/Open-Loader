@@ -21,6 +21,9 @@ public class ConfigSchema {
     @Expose
     public boolean appendSourceToPacks = true;
 
+    @Expose
+    public boolean loadResourcePackData = true;
+
     public static class PackConfig {
 
         @Expose
