@@ -123,7 +123,17 @@ public class PackOptions {
 
     public static PackOptions readOptions(File packCandidate) {
 
-        final File optionsFile = new File(packCandidate.getParent(), packCandidate.getName() + ".packmeta");
+        File optionsFile = new File(packCandidate.getParent(), packCandidate.getName() + ".packmeta");
+
+        if (!optionsFile.exists()) {
+
+            optionsFile = new File(packCandidate.getParent(), packCandidate.getName() + ".packmeta.json");
+
+            if (!optionsFile.exists()) {
+
+                optionsFile = new File(packCandidate.getParent(), packCandidate.getName() + ".json");
+            }
+        }
 
         if (optionsFile.exists()) {
 
