@@ -39,6 +39,10 @@ public class PackOptions {
     @SerializedName("description_includes_source")
     public boolean addSourceToDescription = true;
 
+    @Expose
+    @SerializedName("fixed_position")
+    public boolean fixedPosition = false;
+
     @Override
     public String toString() {
 

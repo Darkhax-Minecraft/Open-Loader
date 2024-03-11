@@ -3,13 +3,16 @@ package net.darkhax.openloader.packs;
 import net.darkhax.openloader.Constants;
 import net.darkhax.openloader.config.ConfigSchema;
 import net.minecraft.ChatFormatting;
+import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.FilePackResources;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.repository.RepositorySource;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -78,19 +81,21 @@ public class OpenLoaderRepositorySource implements RepositorySource {
 
                         if (options.enabled) {
 
-                            // return Component.translatable("pack.nameAndSource", name, Component.translatable("pack.source.openloader")).withStyle(ChatFormatting.GREEN);
+                            if (options.fixedPosition && !options.required) {
+
+                                Constants.LOG.error("Pack '{}' has a fixed position but is not required. This is not allowed! The pack can not be loaded.", packName);
+                                continue;
+                            }
 
                             final PackSource source = PackSource.create(rawDesc -> {
                                 Component description = options.getDescription(packName, rawDesc);
-
                                 if (options.addSourceToDescription && appendSourceToPacks) {
                                     description = Component.translatable("pack.nameAndSource", description, Component.translatable("pack.source.openloader").withStyle(ChatFormatting.DARK_AQUA));
-
                                 }
                                 return description;
                             }, true);
 
-                            final Pack pack = Pack.readMetaAndCreate(packName, options.getDisplayName(packName), options.required, createPackSupplier(packCandidate), this.type.getPackType(), options.getPosition(), source);
+                            final Pack pack = readMetaAndCreate(packName, options.getDisplayName(packName), options.required, createPackSupplier(packCandidate), this.type.getPackType(), options.getPosition(), source, options.fixedPosition);
 
                             if (pack != null) {
 
@@ -153,5 +158,12 @@ public class OpenLoaderRepositorySource implements RepositorySource {
 
         final int suffixLength = suffix.length();
         return str.regionMatches(true, str.length() - suffixLength, suffix, 0, suffixLength);
+    }
+
+    @Nullable
+    public static Pack readMetaAndCreate(String id, Component title, boolean required, Pack.ResourcesSupplier resourceSupplier, PackType type, Pack.Position position, PackSource source, boolean fixedPosition) {
+        int $$7 = SharedConstants.getCurrentVersion().getPackVersion(type);
+        Pack.Info $$8 = Pack.readPackInfo(id, resourceSupplier, $$7);
+        return $$8 != null ? Pack.create(id, title, required, resourceSupplier, $$8, position, fixedPosition, source) : null;
     }
 }
