@@ -18,6 +18,9 @@ public class ConfigSchema {
     @Expose
     public PackConfig dataPacks = new PackConfig();
 
+    @Expose
+    public boolean displaySourceName = true;
+    
     public static class PackConfig {
 
         @Expose

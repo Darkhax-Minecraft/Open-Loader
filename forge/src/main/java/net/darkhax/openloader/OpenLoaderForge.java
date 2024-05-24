@@ -29,12 +29,12 @@ public class OpenLoaderForge {
 
             case CLIENT_RESOURCES -> {
 
-                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.RESOURCES, config.resourcePacks, configDir));
+                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.RESOURCES, config, config.resourcePacks, configDir));
             }
 
             case SERVER_DATA -> {
 
-                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.DATA, config.dataPacks,configDir));
+                event.addRepositorySource(new OpenLoaderRepositorySource(RepoType.DATA, config, config.dataPacks,configDir));
             }
 
             default -> Constants.LOG.warn("Encountered unknown pack type {}. Nothing will be loaded for this type.", event.getPackType().name());

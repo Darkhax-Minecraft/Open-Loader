@@ -19,15 +19,16 @@ import java.util.function.Consumer;
 
 public class OpenLoaderRepositorySource implements RepositorySource {
 
-    private static final PackSource SOURCE = PackSource.create((name) -> Component.translatable("pack.nameAndSource", name, Component.translatable("pack.source.openloader")).withStyle(ChatFormatting.GREEN), true);
     private final RepoType type;
     private final List<File> directories;
     private final ConfigSchema.PackConfig config;
+    private final PackSource sourceInfo;
 
-    public OpenLoaderRepositorySource(RepoType type, ConfigSchema.PackConfig config, Path configDir) {
+    public OpenLoaderRepositorySource(RepoType type, ConfigSchema globalConfig, ConfigSchema.PackConfig config, Path configDir) {
 
         this.type = type;
         this.config = config;
+        this.sourceInfo = PackSource.create((name) -> globalConfig.displaySourceName ? Component.translatable("pack.nameAndSource", name, Component.translatable("pack.source.openloader")).withStyle(ChatFormatting.GREEN) : name, true);
 
         this.directories = new ArrayList<>();
         this.directories.add(configDir.resolve(type.getPath()).toFile());
@@ -76,7 +77,7 @@ public class OpenLoaderRepositorySource implements RepositorySource {
                         final String packName = this.type.getPath() + "/" + packCandidate.getName();
                         final Component displayName = Component.literal(packName);
 
-                        final Pack pack = Pack.readMetaAndCreate(packName, displayName, true, createPackSupplier(packCandidate), this.type.getPackType(), Pack.Position.TOP, SOURCE);
+                        final Pack pack = Pack.readMetaAndCreate(packName, displayName, true, createPackSupplier(packCandidate), this.type.getPackType(), Pack.Position.TOP, this.sourceInfo);
 
                         if (pack != null) {
 
