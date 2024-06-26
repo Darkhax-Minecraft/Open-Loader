@@ -82,7 +82,7 @@ public class PackOptions {
 
                 try {
 
-                    return ComponentSerialization.CODEC.decode(JsonOps.INSTANCE, this.packName).getOrThrow(false, error -> Constants.LOG.error("Invalid pack name for pack '{}': {}", defaultPackName, error)).getFirst();
+                    return ComponentSerialization.CODEC.decode(JsonOps.INSTANCE, this.packName).getOrThrow(error -> new IllegalArgumentException("Invalid pack name for pack '" + defaultPackName + "': " + error)).getFirst();
                 }
 
                 catch (RuntimeException e) {
@@ -108,7 +108,7 @@ public class PackOptions {
 
                 try {
 
-                    return ComponentSerialization.CODEC.decode(JsonOps.INSTANCE, this.description).getOrThrow(false, error -> Constants.LOG.error("Invalid pack description for pack '{}': {}", pack, error)).getFirst();
+                    return ComponentSerialization.CODEC.decode(JsonOps.INSTANCE, this.description).getOrThrow(error -> new IllegalArgumentException("Invalid pack description for pack '" + pack + "': " + error)).getFirst();
                 }
 
                 catch (RuntimeException e) {

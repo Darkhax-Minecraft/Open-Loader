@@ -1,5 +1,5 @@
 plugins {
-    id 'net.neoforged.gradle.userdev' version '7.0.43'
+    id 'net.neoforged.gradle.userdev' version '7.0.145'
     id 'net.darkhax.curseforgegradle'
     id 'com.modrinth.minotaur'
 }
@@ -84,7 +84,7 @@ processResources {
         filter(org.apache.tools.ant.filters.LineContains, negate: true, contains: ['refmap' ] )
     }
 
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta', '*.mixins.json']) {
+    filesMatching(['META-INF/neoforge.mods.toml', 'pack.mcmeta', '*.mixins.json']) {
 
         expand buildProps
     }
@@ -130,7 +130,7 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
     def mainFile = upload(curse_project, jar)
     mainFile.changelogType = 'markdown'
     mainFile.changelog = project.ext.mod_changelog
-    mainFile.addJavaVersion('Java 17')
+    mainFile.addJavaVersion('Java 21')
     mainFile.releaseType = 'release'
     mainFile.addGameVersion('Server', 'Client')
 

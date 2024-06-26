@@ -6,6 +6,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.FilePackResources;
+import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.repository.Pack;
@@ -23,12 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.zip.ZipFile;
 
 public class OpenLoaderRepositorySource implements RepositorySource {
-
+    
     private final RepoType type;
     private final List<File> directories;
     private final ConfigSchema modConfig;
@@ -192,14 +195,15 @@ public class OpenLoaderRepositorySource implements RepositorySource {
     @Nullable
     public static Pack readMetaAndCreate(String id, Component title, boolean required, Pack.ResourcesSupplier resourceSupplier, PackType type, Pack.Position position, PackSource source, boolean fixedPosition) {
         final int manifestVersion = SharedConstants.getCurrentVersion().getPackVersion(type);
-        final Pack.Info packInfo = Pack.readPackInfo(id, resourceSupplier, manifestVersion);
-        return packInfo != null ? Pack.create(id, title, required, resourceSupplier, packInfo, position, fixedPosition, source) : null;
+        PackLocationInfo packLocationInfo = new PackLocationInfo(id, title, source, Optional.empty());
+        final Pack.Metadata packMetadata = Pack.readPackMetadata(packLocationInfo, resourceSupplier, manifestVersion);
+        return packMetadata != null ? new Pack(packLocationInfo, resourceSupplier, packMetadata, new PackSelectionConfig(required, position, fixedPosition)) : null;
     }
 
     public static enum PackFileType {
 
-        ARCHIVE(true, file -> new FilePackResources.FileResourcesSupplier(file, false)),
-        FOLDER(true, file -> new PathPackResources.PathResourcesSupplier(file.toPath(), false)),
+        ARCHIVE(true, FilePackResources.FileResourcesSupplier::new),
+        FOLDER(true, file -> new PathPackResources.PathResourcesSupplier(file.toPath())),
         INVALID(false, file -> null);
 
         private final boolean loadable;
