@@ -29,7 +29,7 @@ public record PackContentType(boolean data, boolean resources) {
      * @return If the pack contains contents for the given pack type.
      */
     public boolean isFor(PackType type) {
-        return (type == PackType.SERVER_DATA && this.data) || (type == PackType.CLIENT_RESOURCES && this.resources);
+        return (this != INVALID && !this.data && !this.resources) || (type == PackType.SERVER_DATA && this.data) || (type == PackType.CLIENT_RESOURCES && this.resources);
     }
 
     /**
