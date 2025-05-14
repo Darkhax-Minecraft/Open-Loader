@@ -6,10 +6,9 @@ import com.google.gson.JsonElement;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.darkhax.bookshelf.common.api.data.codecs.map.MapCodecHelper;
-import net.darkhax.bookshelf.common.api.data.codecs.map.MapCodecs;
 import net.darkhax.openloader.common.impl.OpenLoader;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.server.packs.PackSelectionConfig;
 import net.minecraft.server.packs.repository.Pack;
 
@@ -22,15 +21,15 @@ public record PackOptions(boolean enabled, boolean required, Pack.Position posit
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final PackOptions DEFAULT_OPTIONS = new PackOptions(true, true, Pack.Position.TOP, Optional.empty(), Optional.empty(), true, false);
-    public static final MapCodecHelper<Pack.Position> POSITION = new MapCodecHelper<>(MapCodecs.enumerable(Pack.Position.class));
+    public static final Codec<Pack.Position> POSITION = Codec.STRING.xmap(PackOptions::positionFromName, Enum::name);
     public static final Codec<PackOptions> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            MapCodecs.BOOLEAN.get("enabled", PackOptions::enabled, true),
-            MapCodecs.BOOLEAN.get("required", PackOptions::required, true),
-            POSITION.get("position", PackOptions::position, Pack.Position.TOP),
-            MapCodecs.TEXT.getOptional("name", PackOptions::name),
-            MapCodecs.TEXT.getOptional("description", PackOptions::description),
-            MapCodecs.BOOLEAN.get("include_source_name", PackOptions::includeSourceName, true),
-            MapCodecs.BOOLEAN.get("fixed_position", PackOptions::fixedPosition, false)
+            Codec.BOOL.optionalFieldOf("enabled", true).forGetter(PackOptions::enabled),
+            Codec.BOOL.optionalFieldOf("required", true).forGetter(PackOptions::required),
+            POSITION.optionalFieldOf("position", Pack.Position.TOP).forGetter(PackOptions::position),
+            ComponentSerialization.CODEC.optionalFieldOf("name").forGetter(PackOptions::name),
+            ComponentSerialization.CODEC.optionalFieldOf("description").forGetter(PackOptions::description),
+            Codec.BOOL.optionalFieldOf("include_source_name", true).forGetter(PackOptions::includeSourceName),
+            Codec.BOOL.optionalFieldOf("fixed_position", false).forGetter(PackOptions::fixedPosition)
     ).apply(instance, PackOptions::new));
 
     public PackSelectionConfig selectionConfig() {
@@ -62,5 +61,15 @@ public record PackOptions(boolean enabled, boolean required, Pack.Position posit
         }
         OpenLoader.LOG.debug("Using default pack options for {}", optionsFile.getAbsolutePath());
         return DEFAULT_OPTIONS;
+    }
+
+    private static Pack.Position positionFromName(String name) {
+        if (name.equalsIgnoreCase("top")) {
+            return Pack.Position.TOP;
+        }
+        else if (name.equalsIgnoreCase("bottom")) {
+            return Pack.Position.BOTTOM;
+        }
+        throw new IllegalStateException("Position must be top or bottom. Got " + name);
     }
 }

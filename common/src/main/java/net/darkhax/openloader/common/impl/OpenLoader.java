@@ -1,6 +1,5 @@
 package net.darkhax.openloader.common.impl;
 
-import net.darkhax.bookshelf.common.api.function.CachedSupplier;
 import net.darkhax.openloader.common.impl.conig.Config;
 import net.darkhax.openloader.common.impl.packs.OpenLoaderRepositorySource;
 import net.darkhax.pricklemc.common.api.config.ConfigManager;

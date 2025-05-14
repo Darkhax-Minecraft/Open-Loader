@@ -53,8 +53,6 @@ dependencies {
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.0")) {
         jarJar.ranged(it, "[0.4.0,)")
     }
-
-    implementation group: 'net.darkhax.bookshelf', name: 'bookshelf-forge-1.21.1', version: bookshelf_version
     implementation group: 'net.darkhax.pricklemc', name: 'prickle-forge-1.21.1', version: prickle_version
 
     if (project.hasProperty('jei_version')) {
@@ -94,8 +92,6 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
     mainFile.changelog = rootProject.findProperty('mod_changelog')
     mainFile.addJavaVersion('Java 21')
     mainFile.releaseType = 'release'
-
-    mainFile.addRequirement('bookshelf')
     mainFile.addRequirement('prickle')
 
     if (rootProject.hasProperty('mod_client_only') && rootProject.findProperty('mod_client_only') == 'true') {

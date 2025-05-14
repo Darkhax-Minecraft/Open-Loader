@@ -32,8 +32,6 @@ dependencies {
         modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
         modRuntimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
     }
-
-    modImplementation group: 'net.darkhax.bookshelf', name: 'bookshelf-fabric-1.21.1', version: bookshelf_version
     modImplementation group: 'net.darkhax.pricklemc', name: 'prickle-fabric-1.21.1', version: prickle_version
 }
 
@@ -69,8 +67,6 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
     mainFile.addModLoader('Fabric')
     mainFile.addModLoader('Quilt')
     mainFile.releaseType = 'release'
-
-    mainFile.addRequirement('bookshelf')
     mainFile.addRequirement('prickle')
 
     if (rootProject.hasProperty('mod_client_only') && rootProject.findProperty('mod_client_only') == 'true') {

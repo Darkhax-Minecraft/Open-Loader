@@ -31,13 +31,6 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
-modId = "bookshelf"
-mandatory = true
-versionRange = "${bookshelf_version_range}"
-ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.${mod_id}]]
 modId = "prickle"
 mandatory = true
 versionRange = "${prickle_version_range}"

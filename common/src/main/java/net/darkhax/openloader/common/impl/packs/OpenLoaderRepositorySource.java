@@ -1,8 +1,7 @@
 package net.darkhax.openloader.common.impl.packs;
 
-import net.darkhax.bookshelf.common.api.service.Services;
 import net.darkhax.openloader.common.impl.OpenLoader;
-import net.minecraft.ChatFormatting;
+import net.darkhax.openloader.common.impl.Platform;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackSelectionConfig;
@@ -30,7 +29,7 @@ public class OpenLoaderRepositorySource implements RepositorySource {
     public OpenLoaderRepositorySource(PackType type) {
         this.type = type;
         if (OpenLoader.CONFIG.get().canLoad(type)) {
-            final File packFolder = new File(Services.PLATFORM.getConfigDirectory(), "openloader/packs");
+            final File packFolder = new File(Platform.PLATFORM.getConfigDirectory(), "openloader/packs");
             if (packFolder.mkdirs()) {
                 OpenLoader.LOG.info("Created packs folder a '{}'", packFolder.getAbsolutePath());
             }
