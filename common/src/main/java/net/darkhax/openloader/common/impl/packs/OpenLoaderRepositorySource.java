@@ -33,6 +33,10 @@ public class OpenLoaderRepositorySource implements RepositorySource {
             if (packFolder.mkdirs()) {
                 OpenLoader.LOG.info("Created packs folder a '{}'", packFolder.getAbsolutePath());
             }
+            final File datapacksDir = new File(Platform.PLATFORM.getGameDirectory(), "datapacks");
+            if (datapacksDir.exists() && OpenLoader.CONFIG.get().load_datapacks_dir) {
+                this.scanLocations.add(datapacksDir);
+            }
             this.scanLocations.add(packFolder);
             for (String location : OpenLoader.CONFIG.get().additional_locations) {
                 if (isValidPath(location)) {
