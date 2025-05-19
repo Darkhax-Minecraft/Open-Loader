@@ -1,8 +1,9 @@
 package net.darkhax.openloader.fabric.mixin;
 
 import net.darkhax.openloader.common.impl.OpenLoader;
-import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
+import net.minecraft.client.resources.ClientPackSource;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.repository.BuiltInPackSource;
 import net.minecraft.server.packs.repository.Pack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,17 +14,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Consumer;
 
-@Mixin(ModResourcePackCreator.class)
-public class MixinModResourcePackCreator {
+@Mixin(BuiltInPackSource.class)
+public class MixinBuiltInPackSourceClient {
 
     @Shadow
     @Final
-    private PackType type;
+    private PackType packType;
 
-    @Inject(method = "loadPacks(Ljava/util/function/Consumer;)V", at = @At("RETURN"))
+    @Inject(method = "loadPacks", at = @At("RETURN"))
     private void loadPacks(Consumer<Pack> consumer, CallbackInfo cbi) {
-        if (type == PackType.SERVER_DATA) {
-            OpenLoader.DATA_SOURCE.get().loadPacks(consumer);
+        final BuiltInPackSource self = (BuiltInPackSource) (Object) this;
+        if (packType == PackType.CLIENT_RESOURCES && self instanceof ClientPackSource) {
+            OpenLoader.RESOURCE_SOURCE.get().loadPacks(consumer);
         }
     }
 }

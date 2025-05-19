@@ -5,16 +5,6 @@ plugins {
     id 'com.modrinth.minotaur'
 }
 
-if (project.hasProperty('modmenu_version')) {
-    repositories { RepositoryHandler handler -> {
-        limitedMaven(handler, 'https://maven.terraformersmc.com/', 'com.terraformersmc')
-    }}
-
-    dependencies {
-        modRuntimeOnly("com.terraformersmc:modmenu:${project.findProperty('modmenu_version')}")
-    }
-}
-
 base {
     archivesName = "${mod_name}-fabric-${minecraft_version}"
 }
@@ -26,12 +16,6 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
-    if (project.hasProperty('jei_version')) {
-        modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-        modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-fabric-api:${jei_version}")
-        modRuntimeOnly("mezz.jei:jei-${minecraft_version}-fabric:${jei_version}")
-    }
     modImplementation group: 'net.darkhax.pricklemc', name: 'prickle-fabric-1.21.1', version: prickle_version
 }
 
