@@ -14,15 +14,17 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
 public class OpenLoaderRepositorySource implements RepositorySource {
 
     private static final PackSource SOURCE = PackSource.create(packText -> packText, true);
+    private static final Comparator<File> FILE_NAME_ORDER = Comparator.comparing(File::getName, String.CASE_INSENSITIVE_ORDER).thenComparing(File::getName);
     private final PackType type;
     private final List<File> scanLocations = new LinkedList<>();
 
@@ -74,7 +76,13 @@ public class OpenLoaderRepositorySource implements RepositorySource {
         if (!type.isLoadable()) {
             if (location.isDirectory() && location.exists()) {
                 int validPackCount = 0;
-                for (File subLocation : Objects.requireNonNull(location.listFiles())) {
+                final File[] subLocations = location.listFiles();
+                if (subLocations == null) {
+                    OpenLoader.LOG.warn("Could not list packs in '{}'.", location.getAbsolutePath());
+                    return 0;
+                }
+                Arrays.sort(subLocations, FILE_NAME_ORDER);
+                for (File subLocation : subLocations) {
                     if (!OpenLoader.INVALID_FOLDERS.contains(subLocation.getName())) {
                         validPackCount += loadFrom(subLocation, consumer);
                     }

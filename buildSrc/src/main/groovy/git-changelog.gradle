@@ -24,13 +24,7 @@ catch (Exception e) {
 }
 
 def getExecOutput(commands) {
-
-    def out = new ByteArrayOutputStream()
-
-    exec {
+    return providers.exec {
         commandLine commands
-        standardOutput out
-    }
-
-    return out.toString().trim()
+    }.standardOutput.asText.get().trim()
 }
