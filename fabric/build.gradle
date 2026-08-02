@@ -1,6 +1,6 @@
 plugins {
     id 'multiloader-loader'
-    id 'fabric-loom'
+    id 'net.fabricmc.fabric-loom'
     id 'net.darkhax.curseforgegradle'
     id 'com.modrinth.minotaur'
 }
@@ -11,18 +11,12 @@ base {
 
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
-    mappings loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${parchment_minecraft}:${parchment_version}@zip")
-    }
-    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
-    modImplementation group: 'net.darkhax.pricklemc', name: 'prickle-fabric-1.21.1', version: prickle_version
+    implementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    implementation group: 'net.darkhax.pricklemc', name: 'prickle-fabric-26.2', version: prickle_version
 }
 
 loom {
-    mixin {
-        defaultRefmapName.set("${mod_id}.refmap.json")
-    }
     runs {
         client {
             client()
@@ -44,10 +38,10 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
 
     apiToken = rootProject.findProperty('curse_auth')
 
-    var mainFile = upload(curse_project, tasks.remapJar)
+    var mainFile = upload(curse_project, tasks.jar)
     mainFile.changelogType = 'markdown'
     mainFile.changelog = rootProject.findProperty('mod_changelog')
-    mainFile.addJavaVersion('Java 21')
+    mainFile.addJavaVersion('Java 25')
     mainFile.addModLoader('Fabric')
     mainFile.addModLoader('Quilt')
     mainFile.releaseType = 'release'
@@ -84,7 +78,7 @@ modrinth {
     versionType.set("release")
     loaders = ["fabric", "quilt"]
     gameVersions = ["${minecraft_version}"]
-    uploadFile.set(tasks.remapJar)
+    uploadFile.set(tasks.jar)
     dependencies {
         required.project("fabric-api")
         required.project("bookshelf-lib")

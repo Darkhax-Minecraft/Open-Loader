@@ -28,16 +28,12 @@ repositories {
         }
     }
     exclusiveContent {
-        forRepositories(
-                maven {
-                    name = 'ParchmentMC'
-                    url = 'https://maven.parchmentmc.org/'
-                },
-                maven {
-                    name = "NeoForge"
-                    url = 'https://maven.neoforged.net/releases'
-                }
-        )
+        forRepository {
+            maven {
+                name = 'ParchmentMC'
+                url = 'https://maven.parchmentmc.org/'
+            }
+        }
         filter {
             includeGroup('org.parchmentmc.data')
         }
@@ -110,12 +106,8 @@ processResources {
             'mod_description'              : mod_description,
             'mod_item_icon'                : mod_item_icon,
             'neoforge_version'             : neoforge_version,
-            'neoforge_loader_version_range': neoforge_loader_version_range,
             'fabric_version'               : fabric_version,
             'fabric_loader_version'        : fabric_loader_version,
-            'forge_version'                : forge_version,
-            'forge_loader_version_range'   : forge_loader_version_range,
-            'forge_version_range'          : forge_version_range,
             'prickle_version'              : prickle_version,
             'prickle_version_range'        : prickle_version_range,
             'java_version'                 : java_version,
